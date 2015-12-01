@@ -6,9 +6,14 @@ from load import mnist
 import Plots
 srng = RandomStreams()
 
+f = open("costs.txt", 'w')
+f.write("Starting...\n")
+f.close()
+
 def write(str):
     f = open("costs.txt", 'a')
     f.write(str)
+    f.write("\n")
     f.close()
     
 def floatX(X):
@@ -77,7 +82,6 @@ def plotter(samples, predictions, Ws, img_x, idx):
     predictions = predictions.reshape(shp)
     Plots.plot_predictions_grid(samples, predictions, i, shp)
     return
-
 
 trX, trY, teX, teY, channels, img_x = mnist(onehot=True)
 trX = trX.reshape(trX.shape[0], 784)
