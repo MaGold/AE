@@ -6,6 +6,11 @@ from load import mnist
 import Plots
 srng = RandomStreams()
 
+def write(str):
+    f = open("costs.txt", 'a')
+    f.write(str)
+    f.close()
+    
 def floatX(X):
     return np.asarray(X, dtype=theano.config.floatX)
 
@@ -97,9 +102,12 @@ updates = RMSprop(clean_cost, Ws, lr=0.001)
 train = theano.function(inputs=[X], outputs=noise_cost, updates=updates, allow_input_downcast=True)
 predict = theano.function(inputs=[X], outputs=clean_cost, allow_input_downcast=True)
 reconstruct = theano.function(inputs=[X], outputs=clean_out, allow_input_downcast=True)
-for i in range(100):
+for i in range(10000):
     for start, end in zip(range(0, len(trX), 128), range(128, len(trX), 128)):
         cost = train(trX[start:end])
-    print(predict(teX))
+    #print(predict(teX))
+    c = predict(teX)
+    print(c)
+    write(str(i) + ": " + str(c))
     r = reconstruct(teX[:10, :])
     plotter(teX[:10, :], r, Ws, img_x, i)
