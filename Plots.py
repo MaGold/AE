@@ -138,14 +138,14 @@ def plot_volume(volumes, k, title):
         plt.close('all')
 
 #--------------------------------------------------------------------
-def plot_predictions_grid(samples, predictions, k, imgshape):
+def plot_predictions_grid(samples, predictions, k, imgshape, title=""):
     if imgshape[1] == 1:
-        predictions_grid_grey(samples, predictions, k, imgshape)
+        predictions_grid_grey(samples, predictions, k, imgshape, title)
     elif imgshape[1] == 3:
-        predictions_grid_color(samples, predictions, k, imgshape)
+        predictions_grid_color(samples, predictions, k, imgshape, title)
     return
 
-def predictions_grid_color(samples, predictions, k, imgshape):
+def predictions_grid_color(samples, predictions, k, imgshape, title):
     batch_size = samples.shape[0]
     print("printintg predictions:")
     print(samples.shape)
@@ -171,18 +171,19 @@ def predictions_grid_color(samples, predictions, k, imgshape):
         ax.set_yticklabels([])
         ax.axis('off')
     gs.update(wspace=0)
-    plt.savefig(os.path.join('convpredictions', str(k) + '_' + '_preds.png'))
+    plt.savefig(os.path.join('convpredictions', str(k) + '_' + title + '.png'),
+                bbox_inches='tight')
     plt.close('all')
 
 
 
-def predictions_grid_grey(samples, predictions, idx, imgshape):
+def predictions_grid_grey(samples, predictions, idx, imgshape, title):
     batch_size = samples.shape[0]
     samples = samples.reshape(batch_size, imgshape[2], imgshape[3])
     predictions = predictions.reshape(batch_size, imgshape[2], imgshape[3])
-    plt.figure(figsize=(10, 10))
-    gs = gridspec.GridSpec(5, 2)
-    for i in range(10):
+    plt.figure(figsize=(6, 10))
+    gs = gridspec.GridSpec(6, 2)
+    for i in range(12):
         ax = plt.subplot(gs[i])
         if i % 2 == 0:
             w = samples[i/2, :, :]
@@ -192,15 +193,18 @@ def predictions_grid_grey(samples, predictions, idx, imgshape):
         ax.imshow(w,
                   cmap=plt.cm.gist_yarg,
                   interpolation='nearest',
-                  aspect='equal')
+                  aspect='equal',
+                  vmin=0, vmax=1)
         ax.set_xticklabels([])
         ax.set_yticklabels([])
         ax.axis('off')
-    gs.update(wspace=0)
-    plt.savefig(os.path.join('convpredictions', str(idx) + '_' + '_preds.png'))
+
+    plt.savefig(os.path.join('convpredictions', str(idx) + '_' + title + '.png'),
+                bbox_inches='tight')
     plt.close('all')
 
-
+    
+#-------------------------------------------------------------------
 
     
 def plot_costs(costs):
@@ -221,7 +225,7 @@ def plot_testimg(imgs):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         print(img.shape)
-        ax.imshow(img, cmap=plt.cm.gist_yarg, vmin=0, vmax=255)#, interpolation='nearest')
+        ax.imshow(img, cmap=plt.cm.gist_yarg)#, interpolation='nearest')
     # cmap=plt.cm.gist_yarg,
     # interpolation='nearest',
     # aspect='equal')
